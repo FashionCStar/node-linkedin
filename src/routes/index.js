@@ -33,10 +33,7 @@ module.exports = (app) => {
     message: 'Welcome to the Todos API!'
   }))
 
-  // app.get('/api/oauth/linkedin', controllers.linkedin.oauthlogin)
-  // app.get('/api/oauth/linkedin/callback', controllers.linkedin.linkedinCallback)
   app.get('/oauth/linkedin', function(req, res) {
-    // This will ask for permisssions etc and redirect to callback url. 
     Linkedin.auth.authorize(res, scope);
   });
 
@@ -44,27 +41,13 @@ module.exports = (app) => {
       Linkedin.auth.getAccessToken(res, req.query.code, req.query.state, function(err, results) {
           if (err)
               return console.error(err);
-
           console.log(results);
-
           linkedinVariables.accessToken = results.access_token;
-
           console.log("ACCESS TOKEN IS ", linkedinVariables.accessToken);
-
           linkedinVariables.client = Linkedin.init(linkedinVariables.accessToken);
-
-      /*  linkedinVariables.client.people.me(function(err, $in) {
-              console.log($in);
-          });*/
-
-  /*linkedinVariables.client.people.me('linkedin_id', ['id', 'first-name', 'last-name'], function(err, $in) {
-      // Loads the profile by id.
-      console.log($in);
-  });*/
           linkedinVariables.client.people.id('HM3nX8nJD6', function(err, $in) {
               console.log($in)
           });
-          // return res.redirect('/');
       });
   });
 }
